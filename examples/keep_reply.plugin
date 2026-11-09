@@ -1,0 +1,24 @@
+__id__ = "keep_reply_py"
+__name__ = "Keep Reply (Python)"
+__description__ = "Keeps the reply bar after sending in groups"
+__author__ = "AlkuGram"
+__version__ = "1.0"
+__min_version__ = "11.12.0"
+
+from base_plugin import BasePlugin, HookResult, HookStrategy
+from ui.settings import Switch
+
+
+class KeepReply(BasePlugin):
+    def on_plugin_load(self):
+        self.add_on_send_message_hook()
+
+    def create_settings(self):
+        return [Switch(key="enabled", text="Keep the reply after sending", default=True)]
+
+    def on_send_message_hook(self, account, params):
+        # Group and channel dialog ids are negative.
+        if self.get_setting("enabled", True) and params.replyToMsg is not None and params.peer < 0:
+            params.keep_reply = True
+            return HookResult(strategy=HookStrategy.MODIFY, params=params)
+        return HookResult()

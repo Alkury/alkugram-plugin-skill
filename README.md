@@ -3,7 +3,7 @@
 Write [AlkuGram](https://t.me/alkugram) plugins with an AI assistant.
 
 - **`PLUGIN_API.md`**: the full plugin API for JavaScript (`.js`) and exteraGram-style Python (`.plugin`) plugins on
-  iPhone. Give it to ChatGPT, Claude, Gemini or any other assistant together with your task.
+  iPhone and Android (one API, the same file runs on both). Give it to ChatGPT, Claude, Gemini or any other assistant together with your task.
 - **`skills/alkugram-plugin/`**: a ready skill for Claude Code and other agents that support `SKILL.md`.
 - **`examples/`**: working plugins, including *Keep Reply*, which keeps the reply bar after sending in groups.
 

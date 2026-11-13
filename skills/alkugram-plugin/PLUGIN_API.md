@@ -1,11 +1,12 @@
-# AlkuGram Plugin API (iOS)
+# AlkuGram Plugin API (iOS and Android)
 
 This is the reference for writing AlkuGram plugins, for people and for AI agents (ChatGPT, Claude and others): give
-this file to the assistant together with your task. AlkuGram runs two kinds of plugin:
+this file to the assistant together with your task. iPhone and Android run the same API, so one plugin file works on
+both. AlkuGram runs two kinds of plugin:
 
 | Kind | File | Runs in | Best for |
 | --- | --- | --- | --- |
-| **JavaScript** | `name.js` with a `// @name …` header | JavaScriptCore, one isolated context per plugin | new plugins, simplest API |
+| **JavaScript** | `name.js` with a `// @name …` header | JavaScriptCore (iPhone) or QuickJS (Android), one isolated context per plugin | new plugins, simplest API |
 | **Python (exteraGram format)** | `name.plugin` with `__id__`, `__name__`, `class …(BasePlugin)` | AlkuGram's embedded Python | porting exteraGram plugins |
 
 **Installing:** Settings ▸ AlkuGram ▸ Plugins ▸ “From File” or “From Clipboard”. You can also touch and hold a `.js` or
@@ -154,10 +155,10 @@ class ReplyKeeper(BasePlugin):
 - **Other modules:** `BulletinHelper.show_info/show_success/show_error`, `requests` (get/post), `threading.Thread`
   and `Timer`, `re`, `json`, `html`.
 
-**Not supported on iPhone:**
-- **Android-only APIs:** any `android.*`, `java` classes through `jclass` / `dynamic_proxy`, `hook_utils`, the
-  `org.telegram.ui` / `org.telegram.messenger` classes, and `add_hook` / `pre_request_hook` (these exist only on
-  Android).
+**Not supported (iPhone and Android alike):**
+- **exteraGram's Java bridge:** any `android.*`, `java` classes through `jclass` / `dynamic_proxy`, `hook_utils`, the
+  `org.telegram.ui` / `org.telegram.messenger` classes, and `add_hook` / `pre_request_hook`. AlkuGram's Python has
+  no Java bridge, on Android too.
 - **Python features:** `try/finally` is not supported yet; use `try/except`.
 
 ---

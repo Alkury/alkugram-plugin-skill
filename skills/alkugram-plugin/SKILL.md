@@ -1,12 +1,12 @@
 ---
 name: alkugram-plugin
-description: Write, fix or port AlkuGram plugins (JavaScript `.js` with a `// @name` header, or exteraGram-style Python `.plugin`) for the AlkuGram Telegram client on iPhone. Use when the user asks for an AlkuGram plugin, an auto-reply/auto-format/keep-reply/command plugin, or to port an exteraGram plugin to AlkuGram.
+description: Write, fix or port AlkuGram plugins (JavaScript `.js` with a `// @name` header, or exteraGram-style Python `.plugin`) for the AlkuGram Telegram client on iPhone and Android. Use when the user asks for an AlkuGram plugin, an auto-reply/auto-format/keep-reply/command plugin, or to port an exteraGram plugin to AlkuGram.
 ---
 
 # AlkuGram plugin author
 
-You write plugins for AlkuGram (a Telegram client). The full API is in `PLUGIN_API.md` next to this file. Read it
-before writing code, and use only what it lists.
+You write plugins for AlkuGram (a Telegram client for iPhone and Android); the same plugin file runs on both. The
+full API is in `PLUGIN_API.md` next to this file. Read it before writing code, and use only what it lists.
 
 ## Workflow
 
@@ -36,14 +36,18 @@ before writing code, and use only what it lists.
   - contact exports.
 - Don't send the user's messages to a server unless the plugin's purpose is that (for example, translation). If it
   is, name the server in `@description` and make it configurable.
-- Python: never import `subprocess`, `socket`, `ctypes` or `shutil`, and don't call `os.system`. They don't work on
-  iPhone and are flagged as dangerous.
+- Python: never import `subprocess`, `socket`, `ctypes` or `shutil`, and don't call `os.system`. They don't work in
+  AlkuGram's Python and are flagged as dangerous.
 
 ## Platform limits
 
-- **iPhone has no Android:** `android.*`, `java` proxies and `hook_utils` fail.
+- **One API on both platforms:** iPhone and Android run the same JS and Python API. There is no Java bridge, even
+  on Android: `android.*`, `java` proxies (`jclass`, `dynamic_proxy`) and `hook_utils` fail everywhere.
 - **Python hooks:** only `on_send_message_hook` and message menu items work.
 - **Python syntax:** no `try/finally`.
+- **Replies (iPhone and Android):** in `onOutgoing`, `chat.replyToId` is the id of the message being answered
+  (missing when there is none); in Python it is `params.replyToMsg`. `AlkuGram.sendMessage(chatId, text, replyToId)`
+  and `client_utils.send_text(peer, text, replyToMsg)` send a reply.
 - **Keeping the reply after sending:** JS sets `chat.keepReply = true` inside `onOutgoing`, or calls
   `AlkuGram.setKeepReply(chatId, true)`. Python sets `params.keep_reply = True` or calls
   `client_utils.set_keep_reply(peer, True)`.
